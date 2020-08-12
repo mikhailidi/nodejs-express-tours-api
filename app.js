@@ -8,6 +8,7 @@ app.use(express.json());
 app.get('/', routeHandler.home);
 
 app.get('/api/v1/tours', routeHandler.getTours);
+app.get('/api/v1/tours/:id', routeHandler.getTour);
 
 app.post('/api/v1/tours', routeHandler.addTour);
 
