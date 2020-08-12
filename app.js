@@ -1,22 +1,15 @@
 const express = require('express');
 const app = express();
-const fs = require('fs');
+const routeHandler = require('./lib/handlers');
 const port = 3000;
 
-app.get('/', (req, res) => {
-  res.status(200).json({ bla: 1 });
-});
+app.use(express.json());
 
-app.get('/api/v1/tours', (req, res) => {
-  const tours = JSON.parse(
-    fs.readFileSync(`${__dirname}/dev-data/data/tours.json`)
-  );
+app.get('/', routeHandler.home);
 
-  res.json({
-    status: 'success',
-    data: tours,
-  });
-});
+app.get('/api/v1/tours', routeHandler.getTours);
+
+app.post('/api/v1/tours', routeHandler.addTour);
 
 app.listen(port, () => {
   console.log(`Natour app started on port ${port}`);
