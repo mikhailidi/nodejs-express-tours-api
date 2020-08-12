@@ -9,6 +9,7 @@ app.get('/', routeHandler.home);
 
 app.get('/api/v1/tours', routeHandler.getTours);
 app.get('/api/v1/tours/:id', routeHandler.getTour);
+app.patch('/api/v1/tours/:id', routeHandler.updateTour);
 
 app.post('/api/v1/tours', routeHandler.addTour);
 
