@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const toursFileName = `${__dirname}/../../dev-data/data/tours.json`;
 const tours = JSON.parse(fs.readFileSync(toursFileName));
 

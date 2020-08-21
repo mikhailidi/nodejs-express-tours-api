@@ -1,5 +1,5 @@
-const toursHandler = require('./toursHandler');
-const usersHandler = require('./usersHandler');
+const toursHandler = require('./tours.route');
+const usersHandler = require('./user.route');
 
 exports.home = (req, res) => {
   res.json({ home: true });

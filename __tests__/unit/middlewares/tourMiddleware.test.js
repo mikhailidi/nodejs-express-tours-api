@@ -1,4 +1,4 @@
-const { addTour } = require('../../../lib/middlewares/tourMiddleware');
+const { addTour } = require('../../../src/middlewares/tourMiddleware');
 
 test('should pass the middleware with proper data', async () => {
   const req = {

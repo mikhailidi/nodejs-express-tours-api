@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../../app');
+const app = require('../../src/app');
 const tours = require('../../dev-data/data/tours');
 
 it('makes GET call to the /', () => {
