@@ -15,6 +15,7 @@ it('tests tour index endpoint', async () => {
 it('tests tour show endpoint', async () => {
   const tour = new TourSchema({
     name: 'test tour',
+    description: 'Tour description',
     price: 666,
     rating: 5,
   });
@@ -31,8 +32,23 @@ it('tests tour show endpoint', async () => {
       rating: tour.rating,
       _id: String(tour._id),
       name: tour.name,
+      description: tour.description,
       price: tour.price,
     },
   };
   expect(responseBody).toMatchObject(expectedResponseBody);
+});
+
+it('tests a new tour creation', async () => {
+  const requestBody = {
+    name: 'New Amazing Tour',
+    description: 'Super long tour description',
+    price: 666,
+    rating: 5.5,
+  };
+  const response = await request.post('/api/v1/tours').send(requestBody);
+  expect(response.status).toBe(201);
+
+  const newlyCreatedTour = await TourSchema.findOne({ name: requestBody.name });
+  expect(newlyCreatedTour).toMatchObject(requestBody);
 });
