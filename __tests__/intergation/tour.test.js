@@ -24,13 +24,15 @@ it('tests tour show endpoint', async () => {
   const response = await request.get(`/api/v1/tours/${tour._id}`);
   expect(response.status).toBe(200);
 
-  const body = JSON.parse(response.text);
+  const responseBody = JSON.parse(response.text);
   const expectedResponseBody = {
-    rating: tour.rating,
-    _id: String(tour._id),
-    name: tour.name,
-    price: tour.price,
+    status: 'success',
+    data: {
+      rating: tour.rating,
+      _id: String(tour._id),
+      name: tour.name,
+      price: tour.price,
+    },
   };
-  expect(body.status).toBe('success');
-  expect(body.data).toMatchObject(expectedResponseBody);
+  expect(responseBody).toMatchObject(expectedResponseBody);
 });
