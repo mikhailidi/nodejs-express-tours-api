@@ -1,13 +1,24 @@
 const express = require('express');
 const routeHandler = require('./routes');
 
-const app = express();
+class App {
+  constructor() {
+    this.express = express();
 
-app.use(express.json());
-app.use(express.static(`${__dirname}/../../public`));
+    this.middlewares();
+    this.routes();
+  }
 
-app.get('/', routeHandler.home);
-app.use('/api/v1/tours', routeHandler.toursHandler);
-app.use('/api/v1/users', routeHandler.usersHandler);
+  middlewares() {
+    this.express.use(express.json());
+    this.express.use(express.static(`${__dirname}/../../public`));
+  }
 
-module.exports = app;
+  routes() {
+    this.express.get('/', routeHandler.home);
+    this.express.use('/api/v1/tours', routeHandler.toursHandler);
+    this.express.use('/api/v1/users', routeHandler.usersHandler);
+  }
+}
+
+module.exports = new App().express;

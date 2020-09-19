@@ -10,7 +10,7 @@ router.param('id', controller.handleNotExistingTour);
 router
   .route('/')
   .get(controller.index)
-  .post(middleware.addTour, controller.add);
+  .post(middleware.addTour, controller.store);
 
 router
   .route('/:id')

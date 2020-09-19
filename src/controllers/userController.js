@@ -1,20 +1,21 @@
 const users = [];
 
-exports.index = (req, res) => {
-  res.json({
-    status: 'success',
-    data: users,
-  });
-};
+class UserController {
+  async index(req, res) {
+    res.json({
+      status: 'success',
+      data: users,
+    });
+  }
 
-exports.create = (req, res) => {
-  const requestBody = req.body;
+  async store(req, res) {
+    const requestBody = req.body;
 
-  users.push(new User(requestBody.name, requestBody.email));
+    users.push(new User(requestBody.name, requestBody.email));
 
-  res.status(201).send();
-};
-
+    res.status(201).send();
+  }
+}
 class User {
   constructor(name, email) {
     this.id = Math.floor(Math.random() * 100) + Math.random();
@@ -22,3 +23,5 @@ class User {
     this.email = email;
   }
 }
+
+module.exports = new UserController();

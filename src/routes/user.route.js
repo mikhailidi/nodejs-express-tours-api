@@ -3,6 +3,6 @@ const controller = require('../controllers/userController');
 
 const router = Router();
 
-router.route('/').get(controller.index).post(controller.create);
+router.route('/').get(controller.index).post(controller.store);
 
 module.exports = router;
