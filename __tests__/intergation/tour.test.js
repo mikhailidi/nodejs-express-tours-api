@@ -1,18 +1,36 @@
 const supertest = require('supertest');
 const app = require('../../src/app');
+const TourSchema = require('../../src/models/Tour');
 
 const request = supertest(app);
 
-it('makes GET call to the /', async () => {
-  const response = await request.get('/');
-  expect(response.status).toBe(200);
-  expect(response.body).toStrictEqual({ home: true });
-});
-
-it('makes call to /api/v1/tours', async () => {
+it('tests tour index endpoint', async () => {
   const response = await request.get('/api/v1/tours');
   expect(response.status).toBe(200);
 
   const body = JSON.parse(response.text);
   expect(body.status).toBe('success');
+});
+
+it('tests tour show endpoint', async () => {
+  const tour = new TourSchema({
+    name: 'test tour',
+    price: 666,
+    rating: 5,
+  });
+
+  await tour.save();
+
+  const response = await request.get(`/api/v1/tours/${tour._id}`);
+  expect(response.status).toBe(200);
+
+  const body = JSON.parse(response.text);
+  const expectedResponseBody = {
+    rating: tour.rating,
+    _id: String(tour._id),
+    name: tour.name,
+    price: tour.price,
+  };
+  expect(body.status).toBe('success');
+  expect(body.data).toMatchObject(expectedResponseBody);
 });
