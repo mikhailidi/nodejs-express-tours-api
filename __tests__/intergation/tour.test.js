@@ -16,8 +16,12 @@ it('tests tour show endpoint', async () => {
   const tour = new TourSchema({
     name: 'test tour',
     description: 'Tour description',
+    summary: 'This is a short summary of the tour',
     price: 666,
-    rating: 5,
+    duration: 5,
+    difficulty: 10,
+    maxGroupSize: 35,
+    imageCover: '/test/image.jpg',
   });
 
   await tour.save();
@@ -29,7 +33,6 @@ it('tests tour show endpoint', async () => {
   const expectedResponseBody = {
     status: 'success',
     data: {
-      rating: tour.rating,
       _id: String(tour._id),
       name: tour.name,
       description: tour.description,
@@ -43,8 +46,12 @@ it('tests a new tour creation', async () => {
   const requestBody = {
     name: 'New Amazing Tour',
     description: 'Super long tour description',
+    summary: 'This is a short summary of the tour',
     price: 666,
-    rating: 5.5,
+    duration: 5,
+    difficulty: 10,
+    maxGroupSize: 35,
+    imageCover: '/test/image.jpg',
   };
   const response = await request.post('/api/v1/tours').send(requestBody);
   expect(response.status).toBe(201);
