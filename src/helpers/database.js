@@ -18,10 +18,14 @@ const connect = async () => {
         useUnifiedTopology: true,
       })
       .then(() => {
-        console.log('Connected to MongoDB!');
+        if (process.env.NODE_ENV !== 'test') {
+          console.log('Connected to MongoDB!');
+        }
       })
       .catch((err) => {
-        console.log(err);
+        if (process.env.NODE_ENV !== 'test') {
+          console.log(err);
+        }
       });
   }
 };
@@ -38,7 +42,14 @@ const truncate = async () => {
   }
 };
 
+const disconnect = async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
+};
+
 module.exports = {
   connect,
   truncate,
+  disconnect,
 };
