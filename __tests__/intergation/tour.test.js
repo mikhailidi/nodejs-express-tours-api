@@ -4,12 +4,56 @@ const TourSchema = require('../../src/models/Tour');
 
 const request = supertest(app);
 
-it('tests tour index endpoint', async () => {
-  const response = await request.get('/api/v1/tours');
-  expect(response.status).toBe(200);
+describe('index endpoint', () => {
+  beforeEach(async () => {
+    const tour = new TourSchema({
+      name: 'test tour',
+      description: 'Tour description',
+      summary: 'This is a short summary of the tour',
+      price: 666,
+      duration: 5,
+      difficulty: 10,
+      maxGroupSize: 35,
+      imageCover: '/test/image.jpg',
+    });
 
-  const body = JSON.parse(response.text);
-  expect(body.status).toBe('success');
+    await tour.save();
+
+    const tour2 = new TourSchema({
+      name: 'test tour2',
+      description: 'Tour description',
+      summary: 'This is a short summary of the tour',
+      price: 485,
+      duration: 1,
+      difficulty: 3,
+      maxGroupSize: 8,
+      imageCover: '/test/image-1.jpg',
+    });
+
+    await tour2.save();
+  });
+
+  it('tests with search', async () => {
+    const response = await request.get(
+      '/api/v1/tours?fields=price,name,duration&sort=price'
+    );
+    expect(response.status).toBe(200);
+
+    const body = JSON.parse(response.text);
+    expect(body.status).toBe('success');
+    expect(body.data).toMatchObject([
+      {
+        name: 'test tour2',
+        price: 485,
+        duration: 1,
+      },
+      {
+        name: 'test tour',
+        price: 666,
+        duration: 5,
+      },
+    ]);
+  });
 });
 
 it('tests tour show endpoint', async () => {

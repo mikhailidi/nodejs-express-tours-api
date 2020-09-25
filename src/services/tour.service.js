@@ -10,8 +10,33 @@ class TourService {
     }
   }
 
-  findAll() {
-    return Tour.find();
+  async search(params = {}, filteringParams) {
+    let query = Tour.find(params);
+    if (filteringParams.sort) {
+      query = query.sort(filteringParams.sort.split(',').join(' '));
+    } else {
+      query = query.sort('createdAt');
+    }
+
+    // Field limiting
+    if (filteringParams.fields) {
+      const fields = filteringParams.fields.split(',').join(' ');
+      query = query.select(fields);
+    }
+
+    if (filteringParams.page) {
+      // Pagination
+      const page = filteringParams.page * 1 || 1;
+      const limit = filteringParams.limit * 1 || 10;
+      const skip = (page - 1) * limit;
+      const toursCount = await Tour.countDocuments();
+      if (skip >= toursCount || skip < 0) {
+        throw new Error('Page you are requesting does not exist');
+      }
+      query = query.skip(skip).limit(limit);
+    }
+
+    return query;
   }
 
   findById(id) {

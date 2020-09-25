@@ -2,12 +2,40 @@ const tourService = require('../services/tour.service');
 
 class TourController {
   async index(req, res) {
-    const tours = await tourService.findAll();
-
-    return res.json({
-      status: 'success',
-      data: tours,
+    // Build query
+    const query = { ...req.query };
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    const filteringParams = {};
+    excludedFields.forEach((el) => {
+      if (query[el]) {
+        filteringParams[el] = query[el];
+        delete query[el];
+      }
     });
+
+    // Filtering
+    let querySting = JSON.stringify(query);
+    querySting = querySting.replace(
+      /\b(gte|gt|lte|lt)\b/g,
+      (match) => `$${match}`
+    );
+
+    try {
+      const tours = await tourService.search(
+        JSON.parse(querySting),
+        filteringParams
+      );
+
+      return res.json({
+        status: 'success',
+        data: tours,
+      });
+    } catch (err) {
+      return res.status(400).json({
+        status: 'fail',
+        data: err.message,
+      });
+    }
   }
 
   async get(req, res) {
