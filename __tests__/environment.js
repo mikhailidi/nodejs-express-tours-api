@@ -3,9 +3,9 @@ const MemoryDatabaseServer = require('./helpers/MemoryDatabaseServer');
 
 class CustomEnvironment extends NodeEnvironment {
   async setup() {
-    await super.setup();
-
     this.global.__DB_URL__ = await MemoryDatabaseServer.getConnectionString();
+
+    await super.setup();
   }
 
   async teardown() {

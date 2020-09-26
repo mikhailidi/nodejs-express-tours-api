@@ -1,7 +1,17 @@
-const Tour = require('../models/Tour');
+import Tour, { ITour } from '../models/Tour';
+import {
+  RequestSearchParams,
+  FilteringParams,
+} from '../interfaces/request-search-params.interface';
 
 class TourService {
-  async add(data) {
+  /**
+   * Create a new tour
+   *
+   * @param data
+   * @throws Error
+   */
+  async add(data: ITour) {
     try {
       return await Tour.create(data);
     } catch (err) {
@@ -10,7 +20,14 @@ class TourService {
     }
   }
 
-  async search(params = {}, filteringParams) {
+  /**
+   * Search for all tours
+   *
+   * @param params
+   * @param filteringParams
+   * @throws Error
+   */
+  async search(params: RequestSearchParams, filteringParams: FilteringParams) {
     let query = Tour.find(params);
     if (filteringParams.sort) {
       query = query.sort(filteringParams.sort.split(',').join(' '));
@@ -39,11 +56,23 @@ class TourService {
     return query;
   }
 
-  findById(id) {
+  /**
+   * Find a single tour by id.
+   *
+   * @param id Tour id to find
+   */
+  findById(id: string) {
     return Tour.findById(id);
   }
 
-  async updateById(id, data) {
+  /**
+   * Update a single tour by id.
+   *
+   * @param id Tour id
+   * @param data Data to update
+   * @throws Error
+   */
+  async updateById(id: string, data: Object) {
     try {
       await Tour.findByIdAndUpdate(id, data, {
         runValidators: true,
@@ -54,7 +83,13 @@ class TourService {
     }
   }
 
-  async deleteById(id) {
+  /**
+   * Delete a single tour by id.
+   *
+   * @param id Tour id to delete
+   * @throws Error
+   */
+  async deleteById(id: string) {
     try {
       await Tour.deleteOne({ _id: id });
     } catch (err) {
@@ -64,4 +99,4 @@ class TourService {
   }
 }
 
-module.exports = new TourService();
+export default new TourService();

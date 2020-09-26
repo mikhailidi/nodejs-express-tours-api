@@ -1,7 +1,9 @@
 const databaseHelper = require('../../src/helpers/database');
 
 beforeAll(() => {
-  return databaseHelper.connect();
+  return databaseHelper.connect({
+    db: global.__DB_URL__,
+  });
 });
 
 beforeEach(() => {

@@ -1,17 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const connect = async () => {
-  const DB_CONNECTION =
-    process.env.NODE_ENV === 'test'
-      ? global.__DB_URL__
-      : process.env.DB_CONNECTION.replace(
-          '<PASSWORD>',
-          process.env.DB_PASSWORD
-        );
+export type IConnect = {
+  db: string;
+};
 
+const connect = async ({ db }: IConnect) => {
   if (mongoose.connection.readyState === 0) {
     mongoose
-      .connect(DB_CONNECTION, {
+      .connect(db, {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
@@ -19,7 +15,7 @@ const connect = async () => {
       })
       .then(() => {
         if (process.env.NODE_ENV !== 'test') {
-          console.log('Connected to MongoDB!');
+          console.log('🔌 Connected to MongoDB!');
         }
       })
       .catch((err) => {
@@ -48,8 +44,4 @@ const disconnect = async () => {
   }
 };
 
-module.exports = {
-  connect,
-  truncate,
-  disconnect,
-};
+export { connect, truncate, disconnect };

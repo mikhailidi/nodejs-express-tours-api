@@ -1,4 +1,5 @@
-const { addTour } = require('../../../src/middlewares/tourMiddleware');
+import { addTourMiddleware } from '../../../src/middlewares/tourMiddleware';
+import { Request, Response, NextFunction } from 'express';
 
 test('should pass the middleware with proper data', async () => {
   const req = {
@@ -6,11 +7,11 @@ test('should pass the middleware with proper data', async () => {
       name: 'Normal name',
       description: 'Proper long description',
     },
-  };
-  const res = {};
-  const next = jest.fn();
+  } as Request;
+  const res = {} as Response;
+  const next = (jest.fn() as NextFunction) as any;
 
-  await addTour(req, res, next);
+  await addTourMiddleware(req, res, next);
   expect(next.mock.calls.length).toBe(1);
 });
 
@@ -19,11 +20,11 @@ test('should return 400 response', async () => {
     body: {
       description: null,
     },
-  };
-  const res = setUpExpressMocks();
-  const next = jest.fn();
+  } as Request;
+  const res = (global.setUpExpressMocks() as Response) as any;
+  const next = (jest.fn() as NextFunction) as any;
 
-  await addTour(req, res, next);
+  await addTourMiddleware(req, res, next);
   expect(res.status).toHaveBeenCalledWith(400);
   expect(res.json.mock.calls.length).toBe(1);
   expect(next.mock.calls.length).toBe(0);

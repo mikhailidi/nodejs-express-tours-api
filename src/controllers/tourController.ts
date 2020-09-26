@@ -1,11 +1,16 @@
-const tourService = require('../services/tour.service');
+import { Request, Response, NextFunction } from 'express';
+import tourService from '../services/tour.service';
+import {
+  RequestSearchParams,
+  FilteringParams,
+} from '../interfaces/request-search-params.interface';
 
 class TourController {
-  async index(req, res) {
+  async index(req: Request, res: Response) {
     // Build query
     const query = { ...req.query };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    const filteringParams = {};
+    const filteringParams: FilteringParams = {};
     excludedFields.forEach((el) => {
       if (query[el]) {
         filteringParams[el] = query[el];
@@ -15,14 +20,12 @@ class TourController {
 
     // Filtering
     let querySting = JSON.stringify(query);
-    querySting = querySting.replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      (match) => `$${match}`
-    );
+    querySting.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    const requestSearchParams: RequestSearchParams = JSON.parse(querySting);
 
     try {
       const tours = await tourService.search(
-        JSON.parse(querySting),
+        requestSearchParams,
         filteringParams
       );
 
@@ -38,7 +41,7 @@ class TourController {
     }
   }
 
-  async get(req, res) {
+  async get(req: Request, res: Response) {
     const tour = await tourService.findById(req.params.id);
 
     return res.json({
@@ -47,7 +50,7 @@ class TourController {
     });
   }
 
-  async update(req, res) {
+  async update(req: Request, res: Response) {
     try {
       await tourService.updateById(req.params.id, req.body);
       return res.status(204).send();
@@ -59,7 +62,7 @@ class TourController {
     }
   }
 
-  async delete(req, res) {
+  async delete(req: Request, res: Response) {
     try {
       await tourService.deleteById(req.params.id);
 
@@ -72,7 +75,7 @@ class TourController {
     }
   }
 
-  async store(req, res) {
+  async store(req: Request, res: Response) {
     try {
       await tourService.add(req.body);
 
@@ -86,7 +89,12 @@ class TourController {
     }
   }
 
-  handleInvalidIdParam(req, res, next, id) {
+  handleInvalidIdParam(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    id: any
+  ) {
     if (Number.isInteger(Number(id))) {
       return res.status(400).json({
         status: 'failed',
@@ -97,7 +105,12 @@ class TourController {
     next();
   }
 
-  async handleNotExistingTour(req, res, next, id) {
+  async handleNotExistingTour(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    id: string
+  ) {
     const tour = await tourService.findById(id);
     if (!tour) {
       return res.status(404).json({
@@ -110,4 +123,4 @@ class TourController {
   }
 }
 
-module.exports = new TourController();
+export default new TourController();

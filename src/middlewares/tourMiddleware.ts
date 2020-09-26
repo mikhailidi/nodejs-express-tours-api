@@ -1,6 +1,7 @@
-const { body, validationResult } = require('express-validator');
+import { body, validationResult } from 'express-validator';
+import { Request, Response, NextFunction } from 'express';
 
-exports.addTour = async (req, res, next) => {
+const addTour = async (req: Request, res: Response, next: NextFunction) => {
   await body('name').exists({ checkNull: true }).isLength({ min: 3 }).run(req);
   await body('description')
     .exists({ checkNull: true })
@@ -18,3 +19,5 @@ exports.addTour = async (req, res, next) => {
 
   next();
 };
+
+export { addTour as addTourMiddleware };

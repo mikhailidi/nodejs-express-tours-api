@@ -1,14 +1,17 @@
+import { Request, Response } from 'express';
+import User from '../models/User';
+
 const users = [];
 
 class UserController {
-  async index(req, res) {
+  async index(req: Request, res: Response) {
     res.json({
       status: 'success',
       data: users,
     });
   }
 
-  async store(req, res) {
+  async store(req: Request, res: Response) {
     const requestBody = req.body;
 
     users.push(new User(requestBody.name, requestBody.email));
@@ -16,12 +19,5 @@ class UserController {
     res.status(201).send();
   }
 }
-class User {
-  constructor(name, email) {
-    this.id = Math.floor(Math.random() * 100) + Math.random();
-    this.name = name;
-    this.email = email;
-  }
-}
 
-module.exports = new UserController();
+export default new UserController();

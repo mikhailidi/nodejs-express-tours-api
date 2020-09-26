@@ -1,6 +1,23 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema, Document } from 'mongoose';
 
-const tourSchema = new mongoose.Schema({
+export interface ITour extends Document {
+  name: string;
+  description: string;
+  summary: string;
+  duration: number;
+  difficulty: number;
+  maxGroupSize: number;
+  imageCover: string;
+  price: number;
+  ratingAverage?: number;
+  ratingQuantity?: number;
+  priceDiscount?: number;
+  images?: string[];
+  createdAt: Date;
+  startDates?: Date[];
+}
+
+const TourSchema: Schema = new Schema({
   name: {
     type: String,
     required: [true, 'Tour must have a name'],
@@ -52,6 +69,4 @@ const tourSchema = new mongoose.Schema({
   startDates: [Date],
 });
 
-const Tour = new mongoose.model('Tour', tourSchema);
-
-module.exports = Tour;
+export default mongoose.model<ITour>('Tour', TourSchema);

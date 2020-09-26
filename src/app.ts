@@ -1,7 +1,9 @@
-const express = require('express');
-const routeHandler = require('./routes');
+import express, { Application } from 'express';
+import routeHandler from './routes';
 
 class App {
+  public express: Application;
+
   constructor() {
     this.express = express();
 
@@ -9,16 +11,16 @@ class App {
     this.routes();
   }
 
-  middlewares() {
+  private middlewares(): void {
     this.express.use(express.json());
     this.express.use(express.static(`${__dirname}/../../public`));
   }
 
-  routes() {
-    this.express.get('/', routeHandler.home);
+  private routes(): void {
+    this.express.get('/', routeHandler.homeRoute);
     this.express.use('/api/v1/tours', routeHandler.toursHandler);
     this.express.use('/api/v1/users', routeHandler.usersHandler);
   }
 }
 
-module.exports = new App().express;
+export default new App().express;

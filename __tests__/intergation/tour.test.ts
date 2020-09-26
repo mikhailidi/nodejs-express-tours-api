@@ -1,12 +1,12 @@
-const supertest = require('supertest');
-const app = require('../../src/app');
-const TourSchema = require('../../src/models/Tour');
+import supertest from 'supertest';
+import app from '../../src/app';
+import Tour, { ITour } from '../../src/models/Tour';
 
 const request = supertest(app);
 
 describe('index endpoint', () => {
   beforeEach(async () => {
-    const tour = new TourSchema({
+    const tour: ITour = new Tour({
       name: 'test tour',
       description: 'Tour description',
       summary: 'This is a short summary of the tour',
@@ -19,7 +19,7 @@ describe('index endpoint', () => {
 
     await tour.save();
 
-    const tour2 = new TourSchema({
+    const tour2: ITour = new Tour({
       name: 'test tour2',
       description: 'Tour description',
       summary: 'This is a short summary of the tour',
@@ -57,7 +57,7 @@ describe('index endpoint', () => {
 });
 
 it('tests tour show endpoint', async () => {
-  const tour = new TourSchema({
+  const tour: ITour = new Tour({
     name: 'test tour',
     description: 'Tour description',
     summary: 'This is a short summary of the tour',
@@ -100,6 +100,8 @@ it('tests a new tour creation', async () => {
   const response = await request.post('/api/v1/tours').send(requestBody);
   expect(response.status).toBe(201);
 
-  const newlyCreatedTour = await TourSchema.findOne({ name: requestBody.name });
+  const newlyCreatedTour: ITour = await Tour.findOne({
+    name: requestBody.name,
+  });
   expect(newlyCreatedTour).toMatchObject(requestBody);
 });

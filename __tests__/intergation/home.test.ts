@@ -1,8 +1,7 @@
-const supertest = require('supertest');
-const app = require('../../src/app');
+import supertest from 'supertest';
+import app from '../../src/app';
 
 const request = supertest(app);
-
 it('makes GET call to the /', async () => {
   const response = await request.get('/');
   expect(response.status).toBe(200);
